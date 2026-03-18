@@ -2,15 +2,12 @@
 
 A full-stack forecast monitoring app for UK national wind power generation, built as part of a technical challenge. Compares actual wind generation against BMRS wind power forecasts, with configurable forecast horizon analysis.
 
-> **Built with AI assistance**: GitHub Copilot and Claude (Anthropic) were used to assist with boilerplate, component structure, and Recharts configuration. All core logic — forecast horizon filtering, API integration, error analysis methodology — was written and reasoned through manually.
 
 ---
 
 ## Live App
 
 🔗 **[https://wind-forecast-app-gamma.vercel.app](https://wind-forecast-app-gamma.vercel.app)**
-
-📹 **Demo video**: *(Add YouTube link after recording - max 5 minutes)*
 
 ---
 
