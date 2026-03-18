@@ -31,8 +31,8 @@ export async function fetchActuals(
 ): Promise<ActualRecord[]> {
   const url =
     `${BMRS_BASE}/datasets/FUELHH/stream` +
-    `?settlementDateFrom=${fmtDate(from)}` +
-    `&settlementDateTo=${fmtDate(to)}` +
+    `?settlementDateFrom=${fmtDate(from).split('T')[0]}` +
+    `&settlementDateTo=${fmtDate(to).split('T')[0]}` +
     `&fuelType=WIND`
 
   const res = await fetch(url, {

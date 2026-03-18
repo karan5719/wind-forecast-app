@@ -14,6 +14,18 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: 'Start time must be before end time' }, { status: 400 })
   }
 
+  const fromDate = new Date(from).toISOString().split('T')[0]
+  const toDate = new Date(to).toISOString().split('T')[0]
+  if (fromDate >= toDate) {
+    return NextResponse.json({ error: 'Date range must span at least one full day' }, { status: 400 })
+  }
+
+  const fromDate = new Date(from).toISOString().split('T')[0]
+  const toDate = new Date(to).toISOString().split('T')[0]
+  if (fromDate >= toDate) {
+    return NextResponse.json({ error: 'Date range must span at least one full day' }, { status: 400 })
+  }
+
   try {
     const data = await fetchActuals(new Date(from), new Date(to))
     return NextResponse.json(data)
