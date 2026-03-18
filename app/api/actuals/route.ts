@@ -10,6 +10,10 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: 'from and to params required' }, { status: 400 })
   }
 
+  if (new Date(from) >= new Date(to)) {
+    return NextResponse.json({ error: 'Start time must be before end time' }, { status: 400 })
+  }
+
   try {
     const data = await fetchActuals(new Date(from), new Date(to))
     return NextResponse.json(data)

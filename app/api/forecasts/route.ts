@@ -11,6 +11,10 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: 'from and to params required' }, { status: 400 })
   }
 
+  if (new Date(from) >= new Date(to)) {
+    return NextResponse.json({ error: 'Start time must be before end time' }, { status: 400 })
+  }
+
   const horizonHours = horizon ? parseFloat(horizon) : 4
 
   try {
