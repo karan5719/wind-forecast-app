@@ -21,7 +21,7 @@ export interface ChartDataPoint {
 const BMRS_BASE = 'https://data.elexon.co.uk/bmrs/api/v1'
 
 function fmtDate(d: Date): string {
-  return d.toISOString().slice(0, 19) // "2025-01-01T00:00:00"
+  return d.toISOString()
 }
 
 // Fetch actual wind generation (FUELHH, fuelType=WIND)
@@ -31,8 +31,8 @@ export async function fetchActuals(
 ): Promise<ActualRecord[]> {
   const url =
     `${BMRS_BASE}/datasets/FUELHH/stream` +
-    `?settlementDateFrom=${fmtDate(from).split('T')[0]}` +
-    `&settlementDateTo=${fmtDate(to).split('T')[0]}` +
+    `?settlementDateFrom=${fmtDate(from)}` +
+    `&settlementDateTo=${fmtDate(to)}` +
     `&fuelType=WIND`
 
   const res = await fetch(url, {
