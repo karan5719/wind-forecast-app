@@ -27,7 +27,7 @@ interface ForecastRecord {
 }
 
 export default function Dashboard() {
-  const now = new Date('2024-01-15T00:00:00Z')
+  const now = new Date('2025-01-15T00:00:00Z')
   const [startTime, setStartTime] = useState<Date>(subDays(now, 1))
   const [endTime, setEndTime] = useState<Date>(now)
   const [horizon, setHorizon] = useState(4)

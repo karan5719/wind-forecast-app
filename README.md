@@ -8,9 +8,9 @@ A full-stack forecast monitoring app for UK national wind power generation, buil
 
 ## Live App
 
-🔗 **[https://wind-forecast-app.vercel.app](https://wind-forecast-app.vercel.app)** *(update after deployment)*
+🔗 **[https://wind-forecast-app-gamma.vercel.app](https://wind-forecast-app-gamma.vercel.app)**
 
-📹 **Demo video**: *(add YouTube link after recording)*
+📹 **Demo video**: *(Add YouTube link after recording - max 5 minutes)*
 
 ---
 

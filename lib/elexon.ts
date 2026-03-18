@@ -116,8 +116,8 @@ export async function fetchForecasts(
     ? data
     : data.data ?? data.items ?? []
 
-  // Filter: Jan 2024 onwards, horizon 0-48h
-  const JAN_2024 = new Date('2024-01-01T00:00:00Z').getTime()
+  // Filter: Jan 2025 onwards (per challenge spec), horizon 0-48h
+  const JAN_2025 = new Date('2025-01-01T00:00:00Z').getTime()
   const records: ForecastRecord[] = []
 
   for (const row of rows) {
@@ -129,7 +129,7 @@ export async function fetchForecasts(
     const tPublish = new Date(publishTime).getTime()
     const tTarget = new Date(startTime).getTime()
 
-    if (tTarget < JAN_2024) continue
+    if (tTarget < JAN_2025) continue
 
     const horizonHrs = (tTarget - tPublish) / 3_600_000
     if (horizonHrs < 0 || horizonHrs > 48) continue
