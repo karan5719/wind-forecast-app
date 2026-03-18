@@ -63,10 +63,18 @@ export async function fetchActuals(
     : data.data ?? data.items ?? []
 
   const seen = new Map<string, number>()
+  const fromMs = from.getTime()
+  const toMs = to.getTime()
+  
   for (const row of rows) {
     if (row.fuelType !== 'WIND') continue
     const key = row.startTime as string
     const gen = Number(row.generation ?? row.quantity ?? 0)
+    
+    // Filter by user's selected date range
+    const startMs = new Date(key).getTime()
+    if (startMs < fromMs || startMs > toMs) continue
+    
     if (!seen.has(key) || gen > seen.get(key)!) {
       seen.set(key, gen)
     }
@@ -116,7 +124,9 @@ export async function fetchForecasts(
     ? data
     : data.data ?? data.items ?? []
 
-  // Filter: Jan 2025 onwards (per challenge spec), horizon 0-48h
+  // Filter: within user's selected range and horizon 0-48h
+  const fromMs = from.getTime()
+  const toMs = to.getTime()
   const JAN_2025 = new Date('2025-01-01T00:00:00Z').getTime()
   const records: ForecastRecord[] = []
 
@@ -129,7 +139,8 @@ export async function fetchForecasts(
     const tPublish = new Date(publishTime).getTime()
     const tTarget = new Date(startTime).getTime()
 
-    if (tTarget < JAN_2025) continue
+    // Filter by user's selected date range AND Jan 2025 onwards per challenge spec
+    if (tTarget < JAN_2025 || tTarget < fromMs || tTarget > toMs) continue
 
     const horizonHrs = (tTarget - tPublish) / 3_600_000
     if (horizonHrs < 0 || horizonHrs > 48) continue
