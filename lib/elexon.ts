@@ -29,14 +29,14 @@ export async function fetchActuals(
   from: Date,
   to: Date
 ): Promise<ActualRecord[]> {
-  // BMRS FUELHH API requires date-only format: YYYY-MM-DD
+  // BMRS FUELHH API uses settlementDateFrom/To parameters: YYYY-MM-DD
   const fromDate = fmtDate(from).split('T')[0]
   const toDate = fmtDate(to).split('T')[0]
   
   const url =
     `${BMRS_BASE}/datasets/FUELHH/stream` +
-    `?from=${fromDate}` +
-    `&to=${toDate}` +
+    `?settlementDateFrom=${fromDate}` +
+    `&settlementDateTo=${toDate}` +
     `&fuelType=WIND`
 
   const res = await fetch(url, {
@@ -91,7 +91,7 @@ export async function fetchForecasts(
   from: Date,
   to: Date
 ): Promise<ForecastRecord[]> {
-  // BMRS WINDFOR API requires date-only format: YYYY-MM-DD
+  // BMRS WINDFOR API uses startDateFrom/To parameters: YYYY-MM-DD
   // Fetch forecasts that could cover our window: published up to 48h before
   const publishFrom = new Date(from.getTime() - 48 * 60 * 60 * 1000)
   
@@ -100,8 +100,8 @@ export async function fetchForecasts(
 
   const url =
     `${BMRS_BASE}/datasets/WINDFOR/stream` +
-    `?from=${fromDate}` +
-    `&to=${toDate}`
+    `?startDateFrom=${fromDate}` +
+    `&startDateTo=${toDate}`
 
   const res = await fetch(url, {
     headers: { Accept: 'application/json' },
