@@ -53,13 +53,13 @@ export default function Dashboard() {
         ),
       ])
 
-      if (!actualsRes.ok || !forecastsRes.ok) {
-        const errText = await (actualsRes.ok ? forecastsRes : actualsRes).text()
-        throw new Error(errText)
-      }
+      const actuals: ActualRecord[] = actualsRes.ok ? await actualsRes.json() : []
+      const forecasts: ForecastRecord[] = forecastsRes.ok ? await forecastsRes.json() : []
 
-      const actuals: ActualRecord[] = await actualsRes.json()
-      const forecasts: ForecastRecord[] = await forecastsRes.json()
+      if (!actualsRes.ok) {
+        const errData = typeof actuals === 'object' ? actuals : { error: 'Failed to load actuals' }
+        throw new Error(`Actuals error: ${JSON.stringify(errData)}`)
+      }
 
       // Merge by target time
       const actualMap = new Map(actuals.map((a) => [a.startTime, a.generation]))
@@ -76,9 +76,11 @@ export default function Dashboard() {
 
       setChartData(merged)
       setLastFetched(new Date().toLocaleTimeString())
+      setError(null)
     } catch (e) {
       const msg = e instanceof Error ? e.message : String(e)
       setError(msg)
+      setChartData([])
     } finally {
       setLoading(false)
     }

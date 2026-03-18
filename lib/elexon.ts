@@ -29,11 +29,14 @@ export async function fetchActuals(
   from: Date,
   to: Date
 ): Promise<ActualRecord[]> {
-  // BMRS FUELHH API - try with datetime parameters
+  // BMRS FUELHH API requires date-only format: YYYY-MM-DD
+  const fromDate = fmtDate(from).split('T')[0]
+  const toDate = fmtDate(to).split('T')[0]
+  
   const url =
     `${BMRS_BASE}/datasets/FUELHH/stream` +
-    `?from=${encodeURIComponent(fmtDate(from))}` +
-    `&to=${encodeURIComponent(fmtDate(to))}` +
+    `?from=${fromDate}` +
+    `&to=${toDate}` +
     `&fuelType=WIND`
 
   const res = await fetch(url, {
@@ -49,7 +52,7 @@ export async function fetchActuals(
     } catch (e) {
       detail = await res.text()
     }
-    throw new Error(`FUELHH fetch failed: ${res.status} ${res.statusText}. Details: ${detail}. URL: ${url}`)
+    throw new Error(`FUELHH fetch failed: ${res.status} ${res.statusText}. URL: ${url}. Details: ${detail}`)
   }
 
   const data = await res.json()
@@ -80,15 +83,17 @@ export async function fetchForecasts(
   from: Date,
   to: Date
 ): Promise<ForecastRecord[]> {
+  // BMRS WINDFOR API requires date-only format: YYYY-MM-DD
   // Fetch forecasts that could cover our window: published up to 48h before
   const publishFrom = new Date(from.getTime() - 48 * 60 * 60 * 1000)
+  
+  const fromDate = fmtDate(publishFrom).split('T')[0]
+  const toDate = fmtDate(to).split('T')[0]
 
   const url =
     `${BMRS_BASE}/datasets/WINDFOR/stream` +
-    `?publishDateTimeFrom=${fmtDate(publishFrom)}` +
-    `&publishDateTimeTo=${fmtDate(to)}` +
-    `&startDateTimeFrom=${fmtDate(from)}` +
-    `&startDateTimeTo=${fmtDate(to)}`
+    `?from=${fromDate}` +
+    `&to=${toDate}`
 
   const res = await fetch(url, {
     headers: { Accept: 'application/json' },
@@ -96,7 +101,14 @@ export async function fetchForecasts(
   })
 
   if (!res.ok) {
-    throw new Error(`WINDFOR fetch failed: ${res.status} ${res.statusText}`)
+    let detail = ''
+    try {
+      const errorData = await res.json()
+      detail = JSON.stringify(errorData)
+    } catch (e) {
+      detail = await res.text()
+    }
+    throw new Error(`WINDFOR fetch failed: ${res.status} ${res.statusText}. URL: ${url}. Details: ${detail}`)
   }
 
   const data = await res.json()
