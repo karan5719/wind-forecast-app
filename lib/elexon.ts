@@ -29,14 +29,11 @@ export async function fetchActuals(
   from: Date,
   to: Date
 ): Promise<ActualRecord[]> {
-  // BMRS FUELHH requires date-only format (YYYY-MM-DD), not datetime
-  const fromDate = fmtDate(from).split('T')[0]
-  const toDate = fmtDate(to).split('T')[0]
-  
+  // BMRS FUELHH API - try with datetime parameters
   const url =
     `${BMRS_BASE}/datasets/FUELHH/stream` +
-    `?settlementDateFrom=${fromDate}` +
-    `&settlementDateTo=${toDate}` +
+    `?from=${encodeURIComponent(fmtDate(from))}` +
+    `&to=${encodeURIComponent(fmtDate(to))}` +
     `&fuelType=WIND`
 
   const res = await fetch(url, {
@@ -45,7 +42,14 @@ export async function fetchActuals(
   })
 
   if (!res.ok) {
-    throw new Error(`FUELHH fetch failed: ${res.status} ${res.statusText}`)
+    let detail = ''
+    try {
+      const errorData = await res.json()
+      detail = JSON.stringify(errorData)
+    } catch (e) {
+      detail = await res.text()
+    }
+    throw new Error(`FUELHH fetch failed: ${res.status} ${res.statusText}. Details: ${detail}. URL: ${url}`)
   }
 
   const data = await res.json()
