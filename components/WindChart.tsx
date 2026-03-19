@@ -78,25 +78,17 @@ const yTickFormatter = (val: number) => {
 export default function WindChart({ data, loading, error }: Props) {
   if (loading) {
     return (
-      <div className="flex flex-col items-center justify-center h-80 gap-3">
-        <div className="flex gap-1.5">
-          {[0, 1, 2, 3, 4].map((i) => (
-            <div
-              key={i}
-              className="w-1 bg-blue-400 rounded-full animate-pulse"
-              style={{
-                height: `${20 + Math.sin((i / 4) * Math.PI) * 24}px`,
-                animationDelay: `${i * 0.15}s`,
-              }}
-            />
-          ))}
+      <div className="flex items-center justify-center h-80">
+        <div className="text-center">
+          <span className="w-6 h-6 border-2 border-blue-400/30 border-t-blue-400 rounded-full animate-spin inline-block mb-3" />
+          <p className="text-gray-400 text-sm">Loading chart data...</p>
         </div>
-        <p className="text-gray-400 text-sm">Loading wind data…</p>
       </div>
     )
   }
 
   if (error) {
+    console.error('Error loading wind chart data:', error)
     return (
       <div className="flex items-center justify-center h-80">
         <div className="text-center">
@@ -107,7 +99,7 @@ export default function WindChart({ data, loading, error }: Props) {
     )
   }
 
-  if (!data.length) {
+  if (!data || data.length === 0) {
     return (
       <div className="flex items-center justify-center h-80">
         <p className="text-gray-500">No data for the selected range.</p>
@@ -212,7 +204,7 @@ export default function WindChart({ data, loading, error }: Props) {
               strokeWidth={2}
               dot={false}
               activeDot={{ r: 4, strokeWidth: 0 }}
-              connectNulls={false}
+              connectNulls={true}
             />
           )}
           {hasForecasts && (
@@ -225,7 +217,7 @@ export default function WindChart({ data, loading, error }: Props) {
               dot={false}
               activeDot={{ r: 4, strokeWidth: 0 }}
               strokeDasharray="8 4"
-              connectNulls={false}
+              connectNulls={true}
             />
           )}
         </LineChart>
