@@ -213,7 +213,6 @@ export default function WindChart({ data, loading, error }: Props) {
               dot={false}
               activeDot={{ r: 4, strokeWidth: 0 }}
               connectNulls={false}
-              zIndex={1}
             />
           )}
           {hasForecasts && (
@@ -227,7 +226,6 @@ export default function WindChart({ data, loading, error }: Props) {
               activeDot={{ r: 4, strokeWidth: 0 }}
               strokeDasharray="8 4"
               connectNulls={false}
-              zIndex={2}
             />
           )}
         </LineChart>
