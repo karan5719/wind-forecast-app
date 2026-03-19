@@ -27,7 +27,7 @@ interface ForecastRecord {
 }
 
 export default function Dashboard() {
-  const now = new Date('2025-01-15T00:00:00Z')
+  const now = new Date('2025-01-15T00:00:00Z')  // Back to Jan 2025 for demo with synthetic forecasts
   const [startTime, setStartTime] = useState<Date>(subDays(now, 1))
   const [endTime, setEndTime] = useState<Date>(now)
   const [horizon, setHorizon] = useState(4)
@@ -86,11 +86,11 @@ export default function Dashboard() {
     }
   }, [startTime, endTime, horizon])
 
-  // Fetch on mount and when horizon is applied
+  // Fetch on mount and when dates or horizon change
   useEffect(() => {
     fetchData()
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [horizon])
+  }, [startTime, endTime, horizon])
 
   function handleApply() {
     setHorizon(pendingHorizon)
@@ -145,7 +145,7 @@ export default function Dashboard() {
               value={endTime}
               onChange={(d) => { setEndTime(d); }}
               min={startTime}
-              max={new Date()}
+              max={new Date()}  // Allow current date
             />
             <div className="lg:col-span-1">
               <HorizonSlider
