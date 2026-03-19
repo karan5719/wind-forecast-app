@@ -34,6 +34,13 @@ export default function Dashboard() {
   const [pendingHorizon, setPendingHorizon] = useState(4)
 
   const [chartData, setChartData] = useState<DataPoint[]>([])
+
+  // Downsample utility: keep at most maxPoints evenly spaced
+  function downsample<T>(arr: T[], maxPoints: number): T[] {
+    if (arr.length <= maxPoints) return arr
+    const step = arr.length / maxPoints
+    return Array.from({ length: maxPoints }, (_, i) => arr[Math.floor(i * step)])
+  }
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [lastFetched, setLastFetched] = useState<string | null>(null)
@@ -74,7 +81,9 @@ export default function Dashboard() {
           forecast: forecastMap.get(t) ?? null,
         }))
 
-      setChartData(merged)
+      // Downsample if too many points (e.g., > 2000)
+      const maxPoints = 2000
+      setChartData(downsample(merged, maxPoints))
       setLastFetched(new Date().toLocaleTimeString())
       setError(null)
     } catch (e) {
