@@ -202,6 +202,7 @@ export default function WindChart({ data, loading, error }: Props) {
               <span style={{ color: '#d1d5db', fontSize: 13 }}>{value}</span>
             )}
           />
+          {/* Plot forecast line on top for visibility */}
           {hasActual && (
             <Line
               type="monotone"
@@ -212,6 +213,7 @@ export default function WindChart({ data, loading, error }: Props) {
               dot={false}
               activeDot={{ r: 4, strokeWidth: 0 }}
               connectNulls={false}
+              zIndex={1}
             />
           )}
           {hasForecasts && (
@@ -220,11 +222,12 @@ export default function WindChart({ data, loading, error }: Props) {
               dataKey="forecast"
               name="Forecasted generation"
               stroke="#10B981"
-              strokeWidth={2}
+              strokeWidth={3}
               dot={false}
               activeDot={{ r: 4, strokeWidth: 0 }}
-              strokeDasharray="0"
+              strokeDasharray="8 4"
               connectNulls={false}
+              zIndex={2}
             />
           )}
         </LineChart>
